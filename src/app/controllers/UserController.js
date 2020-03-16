@@ -42,6 +42,34 @@ class UserController {
 
     return res.json(usuario);
   }
+
+  async update(req, res) {
+    /* Lembrar de ajusta funcionalidade para quando alterar o cep
+      alterar localidade, logradouro e bairro automaticament */
+
+    const usuario = await User.findById(req.params.id);
+
+    const { nome, idade, cep } = req.body;
+
+    await usuario.updateOne({
+      nome,
+      idade,
+      cep,
+    });
+
+    const { localidade, logradouro, bairro } = usuario;
+
+    usuario.save();
+
+    return res.json({
+      nome,
+      idade,
+      cep,
+      localidade,
+      logradouro,
+      bairro,
+    });
+  }
 }
 
 export default new UserController();
