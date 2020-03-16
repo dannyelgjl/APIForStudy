@@ -7,6 +7,7 @@ const UserSchema = new mongoose.Schema({
   },
   idade: Number,
   cep: String,
+  localidade: String,
   logradouro: String,
   bairro: String,
 });

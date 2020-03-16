@@ -17,17 +17,24 @@ class UserController {
   async store(req, res) {
     const { nome, idade, cep } = req.body;
 
-    const usuario = await User.findOne({ cep });
+    const usuarioExiste = await User.findOne({ nome });
+
+    if (usuarioExiste) {
+      return res.status(401).json({ error: 'Usuário já existe' });
+    }
+
+    let usuario = await User.findOne({ cep });
 
     if (!usuario) {
       const apiRes = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
 
-      const { logradouro, bairro } = apiRes.data;
+      const { logradouro, bairro, localidade } = apiRes.data;
 
       usuario = await User.create({
         nome,
         idade,
         cep,
+        localidade,
         logradouro,
         bairro,
       });
