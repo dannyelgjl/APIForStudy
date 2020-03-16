@@ -3,24 +3,26 @@ import axios from 'axios';
 
 class UserController {
   async index(req, res) {
-    const user = await User.find();
+    const users = await User.find();
+
+    return res.json(users);
+  }
+
+  async show(req, res) {
+    const user = await User.findById(req.params.id);
 
     return res.json(user);
   }
 
   async store(req, res) {
-    // https://viacep.com.br/ws/${cep}/json/
-
     const { nome, idade, cep } = req.body;
 
-    let usuario = await User.findOne({ cep });
+    const usuario = await User.findOne({ cep });
 
     if (!usuario) {
-      const apiResponse = await axios.get(
-        `https://viacep.com.br/ws/${cep}/json/`
-      );
+      const apiRes = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
 
-      const { logradouro, bairro } = apiResponse.data;
+      const { logradouro, bairro } = apiRes.data;
 
       usuario = await User.create({
         nome,
