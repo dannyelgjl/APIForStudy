@@ -70,6 +70,14 @@ class UserController {
       bairro,
     });
   }
+
+  async destroy(req, res) {
+    const usuario = await User.findById(req.params.id);
+
+    await usuario.remove();
+
+    return res.json('Usuário Deletado');
+  }
 }
 
 export default new UserController();
